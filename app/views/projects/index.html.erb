@@ -1,0 +1,26 @@
+<h1>Projects</h1>
+
+<% if current_user == nil %>
+  <%= button_to "ログイン", login_path %>
+<% else %>
+  <%= button_to "ログアウト", login_path, :confirm => "ログアウトしますか？", :method => :delete %>
+<% end %>
+
+<ul>
+<% unfinished_task = 0 %>
+  <% @projects.each do |project| %>
+  <li>
+    <%= link_to project.title, project_path(project.id)%>(<%= project.tasks.unfinished.count %>/<%= project.tasks.count %>)
+    <%= link_to "[Edit]",edit_project_path(project.id) %>
+    <%= link_to "[Delete]",project_path(project.id), method: :delete,data:{confirm:"are you sure?"}  %>
+  </li>
+<% unfinished_task += project.tasks.unfinished.count %>
+  <% end %>
+</ul>
+
+<p> 現在あなたが溜め込んでいるタスクは<%= unfinished_task %>個です。</p>
+
+<strong><p><%= caution_disp(unfinished_task)%></p></strong>
+
+<p><%= link_to "新しいプロジェクトを追加する。", new_project_path %></p>
+
